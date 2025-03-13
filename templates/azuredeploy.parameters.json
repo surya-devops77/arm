@@ -1,0 +1,43 @@
+{
+    "$schema": "https://schema.management.azure.com/schemas/2019-04-01/deploymentParameters.json#",
+    "contentVersion": "1.0.0.0",
+    "parameters": {
+        "vmName": {
+            "value": "simpleLinuxVM"
+        },
+        "adminUsername": {
+            "value": "azureuser" 
+        },
+        "authenticationType": {
+            "value": "sshPublicKey"
+        },
+        "adminPasswordOrKey": {
+            "value": "" 
+        },
+        "dnsLabelPrefix": {
+            "value": "myuniquednslabel-546" 
+            
+        },
+        "ubuntuOSVersion": {
+            "value": "Ubuntu-2204"
+        },
+        "location": {
+            "value": "Central US" 
+        },
+        "vmSize": {
+            "value": "Standard_B1s"
+        },
+        "virtualNetworkName": {
+            "value": "vNet-arm"
+        },
+        "subnetName": {
+            "value": "Subnet-arm"
+        },
+        "networkSecurityGroupName": {
+            "value": "SecGroupNet-arm"
+        },
+        "securityType": {
+            "value": "TrustedLaunch"
+        }
+    }
+}
