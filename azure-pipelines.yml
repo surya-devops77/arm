@@ -1,30 +1,34 @@
-
 trigger:
 - main
 
-
 pool:
   name: Default 
-
-
 
 variables:
   resourceGroupName: 'my-linux-vm-rg' 
   location: 'Central US'               
   deploymentName: 'DeployLinuxVM'      
 
-
 steps:
+# Ensure the Resource Group exists before deploying ARM template
+- task: AzureCLI@2
+  inputs:
+    azureSubscription: 'arm-template'  
+    scriptType: 'bash'
+    scriptLocation: 'inlineScript'
+    inlineScript: |
+      az group create --name $(resourceGroupName) --location "$(location)"
+
+# Deploy ARM Template
 - task: AzureResourceManagerTemplateDeployment@3
   inputs:
     deploymentScope: 'Resource Group'              
     azureResourceManagerConnection: 'arm-template'  
     subscriptionId: '83f5959f-2f46-4a86-9006-cb2e23ff3bd7'       
-    action: 'Create Resource Group'      
     resourceGroupName: '$(resourceGroupName)'      
     location: '$(location)'                        
     templateLocation: 'Linked artifact'            
-    csmFile: '$(Build.SourcesDirectory)/templates/azuredeploy.json' 
-    csmParametersFile: '$(Build.SourcesDirectory)/templates/azuredeploy.parameters.json'  
+    csmFile: '$(Build.SourcesDirectory)/templates/main.json' 
+    csmParametersFile: '$(Build.SourcesDirectory)/templates/parameters.json'  
     deploymentMode: 'Incremental'                  
-    deploymentName: '$(deploymentName)'            
+    deploymentName: '$(deploymentName)'  
