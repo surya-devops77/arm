@@ -1,0 +1,29 @@
+# Trigger the pipeline on pushes to the main branch
+trigger:
+- main
+
+# Use an Ubuntu agent to run the pipeline
+pool:
+  vmImage: 'ubuntu-latest'
+
+# Define variables for reusability
+variables:
+  resourceGroupName: 'my-linux-vm-rg'  # Target resource group
+  location: 'Central US'               # Matches the parameters file
+  deploymentName: 'DeployLinuxVM'      # Name of the deployment
+
+# Steps to execute
+steps:
+- task: AzureResourceManagerTemplateDeployment@3
+  inputs:
+    deploymentScope: 'Resource Group'              # Scope of deployment
+    azureResourceManagerConnection: 'MyAzureConnection'  # Replace with your service connection name
+    subscriptionId: '<your-subscription-id>'       # Replace with your subscription ID
+    action: 'Create Or Update Resource Group'      # Creates RG if it doesn’t exist
+    resourceGroupName: '$(resourceGroupName)'      # Target resource group
+    location: '$(location)'                        # Location for the resource group
+    templateLocation: 'Linked artifact'            # Template is in the repo
+    csmFile: '$(Build.SourcesDirectory)/templates/azuredeploy.json'  # Path to ARM template
+    csmParametersFile: '$(Build.SourcesDirectory)/templates/azuredeploy.parameters.json'  # Path to parameters file
+    deploymentMode: 'Incremental'                  # Updates resources without deleting others
+    deploymentName: '$(deploymentName)'            # Name of this deployment
